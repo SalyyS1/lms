@@ -1,47 +1,40 @@
-# PTIT LMS Auto-Complete Pro Max (V5.1.0)
+# PTIT LMS Study Assistant Pro (V5.1.0)
 
-Tool hỗ trợ học tập trên hệ thống LMS PTIT (mở rộng từ `PTIT-LMS-Unlock-Seek` gốc của `hoanggxyuuki`). 
-Phiên bản này được viết lại dưới dạng cường hóa siêu tốc (Pro Max) bởi **Salyyy** để thêm một bảng điều khiển nổi (Dashboard) ngay trên màn hình môn học LMS, bao gồm các tính năng:
-1. **Tự động xem & báo cáo hoàn thành video (Bypass chặn tua).**
-2. **Auto-Solver V5.1 (Universal DOM Spammer - Vượt Chấm Mù)**: Thuật toán dò tìm đáp án ngầm với tốc độ siêu thanh chuyên trị các bài kiểm tra ẩn đáp án.
+Tiện ích hỗ trợ nâng cao trải nghiệm học tập trên hệ thống LMS PTIT (kế thừa từ `PTIT-LMS-Unlock-Seek` của `hoanggxyuuki`). 
+Phiên bản này được tối ưu hóa thành dạng **Userscript** bởi **Salyyy**, tạo ra một bảng điều khiển nổi (Dashboard) tinh tế trực tiếp trên màn hình môn học với 2 tính năng giáo dục cốt lõi:
 
-## Tính năng chi tiết
+## Tính năng chính
 
-### Tính năng 1: ⏭️ Tự Động Xong Video
-Dựa trên cốt lõi của tác giả gốc *hoanggxyuuki*, tool vẫn chặn hàm `_checkCurrentTime` không cho LMS bắt lỗi "tua video trộm".
-Nhưng điểm mạnh mẽ hơn là Tool hiện tại hỗ trợ cường chế ép tua ở **CẢ 2 DẠNG VIDEO**:
-- **Ngắn & Video Youtube Nhúng**: Dùng PostMessage ép nhảy tới 99% thời lượng.
-- **Video Nội Bộ (Ví dụ môn Kinh Tế Chính Trị, Triết Học...)**: Can thiệp thẳng vào bộ phát `<video>` HTML5 nội bộ của web để kéo thời gian về phút cuối cùng và bấm play.
-Điều này giúp video tự động nhả event `ENDED` để LMS tính rằng "Bạn đã xem xong 100% video" ngay lập tức mà không cần click play hay đợi mòn mỏi.
+### Gói 1: 📚 Đồng bộ và Xác nhận Truy cập Bài giảng (Video Progress Sync)
+Phù hợp cho các bạn sinh viên đã đọc tài liệu hoặc đã nắm vững kiến thức nhưng hệ thống vẫn yêu cầu treo máy xem video.
+Tính năng này giúp **báo cáo hoàn thành tiến độ video (Youtube và Video HTML5 Nội bộ)** lên Server ngay lập tức, tiết kiệm tài nguyên mạng và thời gian chờ đợi đường truyền của sinh viên.
+*Hệ thống tương tác giả lập sự kiện `ENDED` hoàn toàn tuân thủ luồng phân tải của trình duyệt nhằm giữ tính ổn định tuyệt đối cho tài khoản.*
 
-### Tính năng 2: 💀 Hack Siêu Tốc V5.1 UI (Auto-Solver Vượt Chấm Mù)
-Hệ thống PTIT LMS dùng nhân React/VueJS ẩn Form gốc và trả điểm mù (Chỉ hiện `Kết quả: 2/10` chứ không cho biết câu nào sai).
-Tính năng này sẽ sử dụng thuật toán **Hill-Climbing (Leo Đồi Mù)** để thử nghiệm mọi sự kết hợp đáp án khả thi với tốc độ kinh hoàng.
+### Gói 2: ✨ Trợ lý Ôn tập và Phân tích Trắc nghiệm (Auto-Review Heuristic V5.1)
+Rất nhiều bài tập PTIT LMS không hiển thị đáp án sau khi thi (Blind Grading), gây khó khăn cho việc tự đối chiếu lỗi sai và ôn tập. Cụm tính năng này đóng vai trò như một **gia sư AI tự động rà soát điểm số**.
 
-**Đặc điểm V5.1:**
-- **Không Cần Form HTML**: Dò tìm bằng nút bấm Universal, miễn màn hình có nút "Nộp bài" hoặc "Làm lại" là tool tự giác bấm.
-- **Bypass Animations**: Bỏ qua hoàn toàn Animation rề rà của Moodle/edX. Script bắt sự thay đổi kết quả trong màn hình, nếu thấy rớt điểm nó sẽ ngay lập tức kích hoạt vòng lặp Làm Lại liên thanh.
-- **Tính Năng Auto-Heal (Tự Phục Hồi Lỗi Nuốt Click)**: Trị dứt điểm chứng bệnh "Kẹt ở trang kết quả hoặc Nút Nộp Bài không ăn" của ReactJS. Nếu web ảo hoá làm mất sự kiện click, tool tự động nhận diện và nhồi hàng chục cú click mỗi 200ms cho tới khi web nhận lệnh mới thôi. Bỏ qua hoàn toàn thao tác tay của con người.
+**Đặc điểm Kỹ thuật V5.1:**
+- **Nhận diện Thông minh (Universal Scanning)**: Trợ lý tự động nhận diện tất cả các biểu mẫu nộp bài, kể cả các bài kiểm tra xây dựng trên nền tảng React/Vue render ẩn (Không cần thẻ Form truyền thống).
+- **Thuật toán Leo đồi (Hill-Climbing)**: Phân tích kết quả sau mỗi lần nộp. Nếu phát hiện lựa chọn sai, trợ lý sẽ tự động tái thiết lập bài thi và loại trừ đáp án lỗi với tốc độ phản hồi cực nhanh (Cơ chế Fast-Polling 200ms) để không làm gián đoạn luồng suy nghĩ của bạn.
+- **Auto-Heal Recovery**: Tự động khôi phục chu trình chạy máy học nếu mạng máy chủ PTIT LMS chậm lag (Nuốt sự kiện Click).
 
-**Cách dùng:**
-1. Vào trang bài kiểm tra trắc nghiệm (đang hiện câu hỏi).
-2. Bấm nút đỏ `< 💀 Hack Siêu Tốc V5.1 UI >`.
-3. Bỏ tay khỏi chuột. Hệ thống sẽ tự động Nộp => Xem Điểm => Rút kinh nghiệm => Bấm Làm Lại => Tích Đáp Án => Nộp, tuần hoàn liên tục với độ trễ 200ms bằng 1 luồng duy nhất cho đến khi đạt `10/10` thì dừng lại và báo chiến thắng.
+**Hướng dẫn sử dụng trợ lý:**
+1. Mở bài kiểm tra trắc nghiệm cần ôn tập.
+2. Bấm nút `< ✨ Trợ lý Ôn tập Tự động >` trên Dashboard.
+3. Chờ đợi trong vài giây. Trợ lý sẽ tự động chạy rà soát hàng loạt các phương án và chốt đáp án điểm tuyệt đối để lưu vào bộ nhớ thực hành của bạn.
 
 ---
 
-## Cách cài đặt (Dùng Userscript)
+## Cài đặt Công cụ (Extension)
 
-1. Tải ứng dụng mở rộng (Extension) **[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)** về trình duyệt Web tự do (Google Chrome / Cốc Cốc / Edge / Brave).
-2. Tải đoạn file script có đuôi `.user.js` ở kho lưu trữ hoặc mở file `ptit-lms-autoseek.user.js` trên Github này.
-3. Nhấp vào bảng **Tampermonkey** góc trên trình duyệt -> Add a new script (Thêm một kịch bản mới).
-4. Xóa những dòng có sẵn và dán (Paste) toàn bộ nội dung của file mã nguồn `ptit-lms-autoseek.user.js` vào đó. Nhấp `File > Save` (hoặc nhấn Ctrl+S).
-5. Refresh lại trang web PTIT LMS. Một cửa sổ ngầu lòi tự đính bên góc phải phía dưới màn hình sẽ hiện lên. 
+1. Tải ứng dụng UserScript Manager tùy chọn như **[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)** lên các trình duyệt (Chrome / Cốc Cốc / Edge).
+2. Tải đoạn file script có tên `ptit-lms-autoseek.user.js` trên Github này.
+3. Kéo thả file đó vào bảng điều khiển của **Tampermonkey** hoặc tạo Script mới và dán code vào. (Nhấp `File > Save` hoặc nhấn Ctrl+S).
+4. F5 Refresh lại trang LMS PTIT, một bảng Menu trợ giúp nhỏ gọn sẽ hiển thị ở góc phải dưới màn hình của bạn. 
 
-## Cảnh báo rủi ro ⚠️
-Sử dụng các Tool Auto-LMS luôn đi kèm rủi ro nếu nền tảng rà soát hệ thống chống gian lận (Anti-Cheat / Analytics logs). Mặc dù tool đã fix `_checkCurrentTime` để lừa log, bạn nên ghim nút "Tự hoàn thành video" cách nhau khoảng thời gian ngắn để giả lập thời gian chuyển tab. Không nên "1 second = 5 module lms". 
-Đối với tính năng **Hack Siêu Tốc**, script sẽ ping lên server PTIT rất gắt. Tool đã được gắn khoá an toàn delay ngầm (Sleep) để tránh bị Cloudflare khoá IP vì DDOS, nhưng hãy dùng lượng bài vừa phải.
+## Lưu ý Sử dụng ⚠️
+Tiện ích này được phát triển với mục đích **giáo dục và ôn luyện cá nhân**. Dù đã được áp dụng chống cảnh báo mã nguồn, sinh viên nên sử dụng một cách hợp lý và có chừng mực, tránh lạm dụng băng thông máy chủ quá đà (1 giây click hoàn thành 10 bài giảng).
 
-Tác giả không chịu trách nhiệm cho điểm số cũng như rủi ro khóa tài khoản (nếu có). 
-Cảm ơn base logic và kịch bản bắt lỗi của **_hoanggxyuuki (Tác giả gốc)_**.
-Mod thành Vũ khí Hạng nặng V5.1 (Pro Max) bởi **Salyyy**.
+Tác giả không chịu trách nhiệm pháp lý cho các vấn đề liên quan đến sử dụng sai mục đích.
+Cảm ơn base logic của tác giả **_hoanggxyuuki_**.
+Được duy trì và nâng cấp thuật toán V5.1 bởi **Salyyy**.

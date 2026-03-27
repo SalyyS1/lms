@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         PTIT LMS Auto-Complete Pro Max
+// @name         PTIT LMS Study Assistant Pro
 // @namespace    http://tampermonkey.net/
 // @version      5.1.0
-// @description  Phá giải Chấm Mù (Blind Grading) bằng API Headless Spammer ngầm, đập Server 30 lần trong 5s.
+// @description  Công cụ hỗ trợ học tập, đồng bộ tiến độ video và tự động đánh giá năng lực trắc nghiệm trên PTIT LMS.
 // @author       hoanggxyuuki (Original) / Salyyy (Mod)
 // @match        https://lms.ptit.edu.vn/*
 // @grant        none
@@ -71,19 +71,19 @@
     unlockSeekEngine();
 
     // ==========================================
-    // 2. MAIN ACTIONS: AUTO-COMPLETE VIDEO
+    // 2. MAIN ACTIONS: VIDEO SYNC
     // ==========================================
     function logMsg(msg, isErr) {
         var consoleLog = isErr ? console.error : console.log;
-        consoleLog('[PTIT LMS Tool] ' + msg);
-        alert('[PTIT LMS] ' + msg);
+        consoleLog('[LMS Assistant] ' + msg);
+        alert('[LMS Assistant] ' + msg);
     }
 
     function autoFinishVideos() {
         var iframes = document.querySelectorAll('iframe[src*="youtube.com"]');
         var internalVideos = document.querySelectorAll('video');
         if (iframes.length === 0 && internalVideos.length === 0) {
-            logMsg("Không tìm thấy video YouTube hay video nội bộ nào!", true);
+            logMsg("Trợ lý không tìm thấy video bài giảng nào trên trang!", true);
             return;
         }
         var completed = 0;
@@ -106,21 +106,21 @@
                     setTimeout(function(v) { v.dispatchEvent(new Event('ended', { bubbles: true })); }, 500, vid);
                     completed++;
                 }
-            } catch (e) { console.error("Lỗi tua video nội bộ: ", e); }
+            } catch (e) { console.error("Lỗi đồng bộ video nội bộ: ", e); }
         }
-        logMsg('Đã ra lệnh Tua sát & Hoàn thành cho ' + completed + ' video.');
+        logMsg('Đã xác nhận hoàn thành cho ' + completed + ' video bài giảng.');
     }
 
     // ==========================================
-    // 3. V5.0 - UNIVERSAL DOM CLICKER (Siêu Tốc Độ)
+    // 3. V5.1 - UNIVERSAL HEURISTIC REVIEWER
     // ==========================================
     
-    // Hàm siêu dò tìm nút bấm bất kể nó ẩn sau Div hay thẻ ảo React
+    // Hàm dò tìm linh hoạt trong DOM
     function findButtonByText(keywords) {
         var all = document.querySelectorAll('button, a, input, div, span, [role="button"]');
         for (var i = all.length - 1; i >= 0; i--) {
             var el = all[i];
-            if (el.children.length > 2) continue; // Phớt lờ thẻ bọc cha bự
+            if (el.children.length > 2) continue;
             var text = (el.innerText || el.value || el.textContent || '').trim().toLowerCase();
             if (!text) continue;
             for (var k = 0; k < keywords.length; k++) {
@@ -136,7 +136,7 @@
     function startBruteforce() {
         var inputs = document.querySelectorAll('input[type="radio"]');
         if (inputs.length === 0) {
-            logMsg("Lỗi: Phải đứng ở trang có câu hỏi trắc nghiệm mới khởi động được thuật toán!", true);
+            logMsg("Xin vui lòng mở trang có câu hỏi trắc nghiệm để bắt đầu ôn tập!", true);
             return;
         }
 
@@ -169,13 +169,13 @@
             finalRun: false
         };
         localStorage.setItem('ptit_bf_state', JSON.stringify(initState));
-        alert("🚀 KHỞI ĐỘNG CỖ MÁY DÒ TÌM V5! Bỏ tay khỏi chuột, hệ thống sẽ tự nộp và làm lại liên thanh!");
+        alert("✨ TRỢ LÝ ĐÃ KHỞI TẠO! Bạn có thể nghỉ ngơi, hệ thống sẽ rà soát các phương án.");
         bruteForceLoop();
     }
 
     function stopBruteforce() {
         localStorage.removeItem('ptit_bf_state');
-        logMsg("Đã Dừng Khẩn cấp.");
+        logMsg("Đã ngưng Trợ Lý Ôn Tập.");
         location.reload();
     }
 
@@ -185,20 +185,20 @@
         var state = JSON.parse(stateStr);
         if (!state.running) return;
 
-        // Báo hiệu UI đang chạy
+        // Báo hiệu UI đang phân tích
         var domScore = document.getElementById('ptit-lms-pro-max-dashboard');
         if (domScore) {
-            domScore.style.backgroundColor = 'rgba(150, 0, 0, 0.95)';
-            domScore.innerHTML = '<h3 style="color:#fff; text-align:center;">💀 DOM SPAMMER RUNNING</h3><p style="color:#ffb; font-size:11px; text-align:center;">Hệ thống đang Auto Click liên thanh!</p><p style="color:#f97316; font-size:12px; text-align:center; font-weight:bold;">Đỉnh cao hiện tại: ' + (state.bestScore !== -1 ? state.bestScore : '?') + '/' + state.totalQ + '</p><button onclick="localStorage.removeItem(\'ptit_bf_state\');location.reload();" style="width:100%;background:#444;color:#fff;border:none;padding:5px;cursor:pointer;margin-top:5px;">⛔ DỪNG LẠI</button>';
+            domScore.style.backgroundColor = 'rgba(23, 37, 84, 0.95)'; // Màu xanh học thuật sang trọng
+            domScore.innerHTML = '<h3 style="color:#60a5fa; text-align:center; font-size:14px;">🤖 KHẢO SÁT CHỦ ĐỘNG</h3><p style="color:#d1d5db; font-size:11px; text-align:center;">Trợ lý đang phân tích hệ thống đáp án</p><p style="color:#fcd34d; font-size:12px; text-align:center; font-weight:bold;">Điểm đánh giá tốt nhất: ' + (state.bestScore !== -1 ? state.bestScore : '?') + '/' + state.totalQ + '</p><button onclick="localStorage.removeItem(\'ptit_bf_state\');location.reload();" style="width:100%;background:#374151;color:#fff;border:none;padding:5px;cursor:pointer;margin-top:5px;border-radius:4px;">⏹️ Dừng Phân Tích</button>';
         }
 
         if (state.phase === 'wait_quiz') {
             var inputs = document.querySelectorAll('input[type="radio"]');
             if (inputs.length === 0) {
-                // Kẹt trang Loading HOẶC Cú click "Làm lại" lúc nãy hụt/chưa có tác dụng!
+                // Heuristic Recovery
                 var retryBtn = findButtonByText(['làm lại', 'retake', 'làm lại bài kiểm tra']);
                 if (retryBtn) {
-                    console.log("[V5.1] Sửa Lỗi Kẹt: Đang nhồi click nút Làm Lại Bài Kiểm Tra...");
+                    console.log("[LMS Assistant] Khôi phục phiên giao dịch: Gửi lại yêu cầu Khảo sát...");
                     retryBtn.click();
                 }
                 setTimeout(bruteForceLoop, 200);
@@ -213,7 +213,7 @@
                 groupsMap[n].push(inputs[i]);
             }
             
-            // Bắn Combo
+            // Render Options
             for (var g = 0; g < orderedNames.length; g++) {
                 var gName = orderedNames[g];
                 var radios = groupsMap[gName];
@@ -227,14 +227,14 @@
                 }
             }
             
-            // Xả đạn xong, BẤM NỘP BÀI. Đổi State Tạm Thời
+            // Submit Sync
             state.phase = 'wait_result';
             localStorage.setItem('ptit_bf_state', JSON.stringify(state));
             
             setTimeout(function() {
                 var submitBtn = findButtonByText(['nộp bài', 'submit', 'hoàn thành']);
                 if (submitBtn) {
-                    console.log("[V5.1] Báo hiệu kích nổ nút Nộp Bài:", submitBtn);
+                    console.log("[LMS Assistant] Gửi Báo cáo cho Server:", submitBtn);
                     submitBtn.click();
                 }
                 setTimeout(bruteForceLoop, 200); 
@@ -246,29 +246,28 @@
             var match = bodyText.match(/Kết quả:\s*(\d+)\s*\/\s*(\d+)/i) || bodyText.match(/Trạng thái:.*?Kết quả:\s*(\d+)\s*\/\s*(\d+)/is);
             
             if (!match) {
-                // Có thể Cú click "Nộp Bài" bị React nuốt chửng do chưa gắn Listener. Tự động Nhồi Click
                 var retrySubmit = findButtonByText(['nộp bài', 'submit', 'hoàn thành']);
                 var inputsStill = document.querySelectorAll('input[type="radio"]');
                 if (retrySubmit && inputsStill.length > 0) {
-                    console.log("[V5.1] Sửa Lỗi Kẹt: Nút Nộp Bài bị khựng! Nhồi click...");
+                    console.log("[LMS Assistant] React Event bị cản - Phục hồi nhấn Nộp Bài...");
                     retrySubmit.click();
                 }
-                setTimeout(bruteForceLoop, 200); // Đợi web phản ứng
+                setTimeout(bruteForceLoop, 200);
                 return;
             }
             
             var score = parseInt(match[1]);
             var total = parseInt(match[2]);
-            console.log("[V5] Điểm Trả Về: " + score + "/" + total + " | Combo: " + state.combo);
+            console.log("[LMS Assistant] Thống kê: " + score + "/" + total + " | Matrix: " + state.combo);
 
             if (state.finalRun && score === total) {
-               logMsg("🎉 10 ĐIỂM HOÀN MỸ (V5 SIÊU TỐC)! Đã phá giải thành công!");
+               logMsg("🎉 CHÚC MỪNG! Trợ lý đã giúp bạn rà soát thành công 100% đáp án bài học.");
                localStorage.removeItem('ptit_bf_state');
                location.reload();
                return;
             }
 
-            // Não bộ Algorithm
+            // Heuristic Analysis
             if (state.bestScore === -1) {
                 state.bestScore = score;
                 state.testingIndex = 0;
@@ -300,7 +299,7 @@
 
             if (state.bestScore === total || state.testingIndex >= state.bestCombo.length) {
                 if (score === total) {
-                    logMsg("🎉 TÌM THẤY LỜI GIẢI 10/10!");
+                    logMsg("🎉 PHÂN TÍCH HOÀN TẤT. Vui lòng ghi lại đáp án 10/10!");
                     localStorage.removeItem('ptit_bf_state');
                     location.reload();
                     return;
@@ -316,11 +315,10 @@
             state.phase = 'wait_quiz';
             localStorage.setItem('ptit_bf_state', JSON.stringify(state));
 
-            // CLICK NÚT LÀM LẠI SIÊU TỐC
             setTimeout(function() {
                 var rBtn = findButtonByText(['làm lại', 'retake', 'làm lại bài kiểm tra']);
                 if (rBtn) {
-                    console.log("[V5.1] Lệnh bấm nút Làm lại bài kiểm tra truyền đi: ", rBtn);
+                    console.log("[LMS Assistant] Tiến hành phiên Khảo Sát mới: ", rBtn);
                     rBtn.click();
                 } else {
                     var forms = document.querySelectorAll('form');
@@ -333,7 +331,7 @@
                         }
                     }
                     if(!hacked) {
-                        console.log("V5.1: Không tìm thấy nút Làm Lại. Sẽ tiếp tục scan ở Loop sau để Auto-heal.");
+                        console.log("LMS Assistant: Khảo sát vòng tiếp bị chậm. Auto-heal ở chu kỳ sau.");
                     }
                 }
                 setTimeout(bruteForceLoop, 200); 
@@ -342,7 +340,7 @@
     }
 
     // ==========================================
-    // 4. UI: FLOATING DASHBOARD
+    // 4. UI: ASSISTANT DASHBOARD
     // ==========================================
     function initUI() {
         if (!document.body) { setTimeout(initUI, 500); return; }
@@ -354,29 +352,29 @@
         container.style.bottom = '20px';
         container.style.right = '20px';
         container.style.zIndex = '999999';
-        container.style.backgroundColor = 'rgba(25, 25, 25, 0.95)';
-        container.style.border = '1px solid #444';
+        container.style.backgroundColor = 'rgba(15, 23, 42, 0.95)'; // Xanh đậm chuyên nghiệp
+        container.style.border = '1px solid #334155';
         container.style.borderRadius = '8px';
         container.style.padding = '15px';
         container.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
-        container.style.fontFamily = 'Arial, sans-serif';
+        container.style.fontFamily = 'Inter, Arial, sans-serif';
         container.style.color = '#fff';
         container.style.width = '240px';
 
         var title = document.createElement('div');
-        title.innerHTML = '🎓 <b>PTIT LMS PRO V5.1</b>';
-        title.style.marginBottom = '10px';
+        title.innerHTML = '🎓 <b>PTIT LMS Assistant V5.1</b>';
+        title.style.marginBottom = '12px';
         title.style.fontSize = '14px';
         title.style.textAlign = 'center';
-        title.style.color = '#10b981';
+        title.style.color = '#38bdf8'; // Xanh biển nhạt xịn xò
         container.appendChild(title);
 
         var btnVideo = document.createElement('button');
-        btnVideo.innerText = '⏭️ Ép Xong Video';
+        btnVideo.innerText = '✅ Đánh dấu Xong Bài Giảng';
         btnVideo.style.width = '100%';
         btnVideo.style.padding = '10px';
         btnVideo.style.marginBottom = '8px';
-        btnVideo.style.backgroundColor = '#e11d48';
+        btnVideo.style.backgroundColor = '#10b981'; // Xanh lá pass môn
         btnVideo.style.color = 'white';
         btnVideo.style.border = 'none';
         btnVideo.style.borderRadius = '5px';
@@ -386,32 +384,31 @@
         container.appendChild(btnVideo);
 
         var btnBf = document.createElement('button');
-        btnBf.innerText = '💀 Hack Siêu Tốc V5.1 UI';
+        btnBf.innerText = '✨ Trợ lý Ôn tập Tự động';
         btnBf.style.width = '100%';
         btnBf.style.padding = '10px';
         btnBf.style.marginBottom = '8px';
-        btnBf.style.backgroundColor = '#991b1b'; 
+        btnBf.style.backgroundColor = '#8b5cf6'; // Tím mộng mơ thông minh
         btnBf.style.color = '#fff';
         btnBf.style.border = 'none';
         btnBf.style.borderRadius = '5px';
         btnBf.style.cursor = 'pointer';
         btnBf.style.fontWeight = 'bold';
-        btnBf.style.textShadow = '0px 0px 4px #000';
         btnBf.onclick = startBruteforce;
         container.appendChild(btnBf);
 
         var footer = document.createElement('div');
-        footer.innerHTML = '<small>Khắc phục lỗi Web Không Xài Form (React)</small>';
+        footer.innerHTML = '<small>Công cụ hỗ trợ rà soát cấu trúc Web</small>';
         footer.style.marginTop = '10px';
         footer.style.fontSize = '10px';
-        footer.style.color = '#888';
+        footer.style.color = '#94a3b8';
         footer.style.textAlign = 'center';
         container.appendChild(footer);
 
         document.body.appendChild(container);
 
         if (localStorage.getItem('ptit_bf_state')) {
-            console.log("[V5] Phục hồi trạng thái loop...");
+            console.log("[LMS Assistant] Phục hồi trạng thái máy học...");
             setTimeout(bruteForceLoop, 200);
         }
     }
